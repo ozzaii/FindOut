@@ -1,9 +1,9 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* Global Variables - Neon Orange Theme */
 :root {
@@ -226,6 +226,15 @@ body {
   to { transform: rotate(360deg); }
 }
 
+.animate-spin-reverse {
+  animation: spin-reverse 3s linear infinite;
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
 .pulse-glow {
   animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -325,6 +334,8 @@ body {
 .border-neon { border-color: var(--neon-orange); }
 .shadow-neon { box-shadow: 0 0 20px var(--neon-orange); }
 .bg-glass { background: var(--glass-white); }
+.bg-neon-gradient { background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-bright)); }
+.neon-gradient { background: linear-gradient(135deg, var(--neon-orange), var(--neon-orange-bright)); }
 
 /* High Performance Settings */
 .smooth-scroll { 

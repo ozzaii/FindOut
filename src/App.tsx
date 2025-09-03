@@ -1,441 +1,142 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Heart, 
-  Share2, 
-  ShoppingBag, 
-  Users, 
-  Zap, 
-  Sparkles,
-  Camera,
-  TrendingUp,
-  Star,
-  ArrowRight,
-  Play
-} from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+// Import completed components
+import LandingPage from './pages/LandingPage';
+import OutfitUpload from './components/OutfitUpload';
+import InfiniteOutfitFeed from './components/InfiniteOutfitFeed';
+import Navigation from './components/Navigation';
+import { affiliateTracker } from './services/affiliateTracker';
+
+// Initialize services on app load
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentOutfit, setCurrentOutfit] = useState(0);
-
-  // Mock outfit data for demonstration
-  const outfits = [
-    {
-      id: 1,
-      user: "Zeynep",
-      image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&h=600&fit=crop",
-      likes: 2345,
-      products: [
-        { name: "Cream Sweater", price: "₺299", brand: "Zara" },
-        { name: "Black Midi Skirt", price: "₺189", brand: "H&M" },
-        { name: "Ankle Boots", price: "₺450", brand: "Mango" }
-      ]
-    },
-    {
-      id: 2,
-      user: "Ayşe",
-      image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop",
-      likes: 1876,
-      products: [
-        { name: "Denim Jacket", price: "₺399", brand: "Trendyol" },
-        { name: "White Tee", price: "₺79", brand: "LC Waikiki" },
-        { name: "Black Jeans", price: "₺249", brand: "Zara" }
-      ]
-    }
-  ];
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
+    const initializeApp = async () => {
+      try {
+        // Initialize demo user session
+        const demoUser = {
+          id: 'demo_user_' + Date.now(),
+          username: 'style_explorer',
+          full_name: 'Demo User',
+          avatar_url: 'https://images.unsplash.com/photo-1494790108755-2616b5ad8d64?w=100&h=100&fit=crop&crop=face',
+          follower_count: 125,
+          following_count: 89,
+          outfit_count: 23,
+          total_earnings: 156.50,
+          subscription_tier: 'free' as const,
+          verification_status: 'unverified' as const
+        };
+        
+        setUser(demoUser);
+        affiliateTracker.setUserId(demoUser.id);
+        
+        // Simulate loading time for smooth UX
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setIsLoading(false);
+      } catch (error) {
+        console.error('App initialization failed:', error);
+        setIsLoading(false);
       }
-    }
-  };
+    };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1
-    }
-  };
+    initializeApp();
+  }, []);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-void flex items-center justify-center">
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="text-center"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0, opacity: 0 }}
+          className="text-center relative"
         >
+          {/* Animated background glow */}
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.7, 0.3]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute inset-0 bg-neon-orange/20 rounded-full blur-xl -z-10"
+          />
+          
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 mx-auto mb-4 border-4 border-neon-orange border-t-transparent rounded-full"
-          />
+            className="w-20 h-20 mx-auto mb-6 border-4 border-neon-orange border-t-transparent rounded-full relative"
+          >
+            <div className="absolute inset-2 border-2 border-neon-orange/30 border-b-transparent rounded-full animate-spin-reverse" />
+          </motion.div>
+          
           <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-4xl font-display font-bold text-neon bg-gradient-to-r from-neon-orange to-neon-orange-glow bg-clip-text text-transparent"
+            className="text-5xl font-display font-bold gradient-text mb-4"
           >
             FindOut
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="text-white/60 mt-2 font-body"
+            className="text-white/70 text-lg font-body mb-2"
           >
             Moda keşfinin geleceği yükleniyor...
           </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex justify-center space-x-1 mt-6"
+          >
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 1, 0.5]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.2
+                }}
+                className="w-2 h-2 bg-neon-orange rounded-full"
+              />
+            ))}
+          </motion.div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-void text-white overflow-x-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 hero-bg pointer-events-none" />
-      
-      {/* Navigation */}
-      <motion.nav 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 glass-card m-4 rounded-2xl backdrop-blur-3xl"
-      >
-        <div className="flex items-center justify-between px-6 py-4">
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-3"
-          >
-            <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-display font-bold gradient-text">FindOut</span>
-          </motion.div>
-          
-          <div className="hidden md:flex items-center space-x-6">
-            <a href="#" className="hover:text-neon-orange transition-colors">Keşfet</a>
-            <a href="#" className="hover:text-neon-orange transition-colors">Trendler</a>
-            <a href="#" className="hover:text-neon-orange transition-colors">Hakkında</a>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="neon-button"
-            >
-              Başla
-            </motion.button>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Hero Section */}
-      <motion.section 
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="min-h-screen flex items-center justify-center relative pt-20"
-      >
-        <div className="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div variants={itemVariants} className="space-y-8">
-            <motion.h1 
-              className="text-6xl lg:text-8xl font-display font-black leading-none"
-            >
-              <span className="text-white">Style</span>
-              <br />
-              <span className="gradient-text">Keşfinin</span>
-              <br />
-              <span className="text-neon">Geleceği</span>
-            </motion.h1>
-            
-            <motion.p 
-              variants={itemVariants}
-              className="text-xl text-white/80 max-w-lg leading-relaxed font-body"
-            >
-              Gerçek insanların üzerinde gördüğünüz kıyafetleri bulun. 
-              AI destekli stil önerilerimizle moda yolculuğunuzu başlatın.
-            </motion.p>
-
-            <motion.div 
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4"
-            >
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="neon-button flex items-center space-x-3 px-8 py-4 text-lg"
-              >
-                <Play className="w-6 h-6" />
-                <span>Keşfet</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                className="glass-card px-8 py-4 rounded-2xl border-2 border-white/10 hover:border-neon-orange/50 transition-all duration-300 flex items-center space-x-3"
-              >
-                <Camera className="w-6 h-6 text-neon-orange" />
-                <span>İlk Outfit'ini Yükle</span>
-              </motion.button>
-            </motion.div>
-
-            <motion.div 
-              variants={itemVariants}
-              className="grid grid-cols-3 gap-8 pt-8"
-            >
-              <div className="text-center">
-                <div className="text-3xl font-bold text-neon-orange">10K+</div>
-                <div className="text-white/60 text-sm">Aktif Kullanıcı</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-neon-orange">50K+</div>
-                <div className="text-white/60 text-sm">Outfit Keşfi</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-neon-orange">99%</div>
-                <div className="text-white/60 text-sm">Memnuniyet</div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Interactive Outfit Card */}
-          <motion.div 
-            variants={itemVariants}
-            className="relative"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentOutfit}
-                initial={{ x: 300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="outfit-card p-6 max-w-md mx-auto"
-              >
-                <div className="relative mb-4">
-                  <img 
-                    src={outfits[currentOutfit].image}
-                    alt="Outfit"
-                    className="w-full h-80 object-cover rounded-xl"
-                  />
-                  <div className="absolute top-3 right-3 glass-card p-2 rounded-xl">
-                    <Heart className="w-5 h-5 text-neon-orange" />
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 glass-card p-3 rounded-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-neon-gradient rounded-full flex items-center justify-center text-xs font-bold">
-                          {outfits[currentOutfit].user[0]}
-                        </div>
-                        <span className="font-medium">{outfits[currentOutfit].user}</span>
-                      </div>
-                      <div className="flex items-center space-x-4 text-sm text-white/80">
-                        <span className="flex items-center space-x-1">
-                          <Heart className="w-4 h-4" />
-                          <span>{outfits[currentOutfit].likes}</span>
-                        </span>
-                        <Share2 className="w-4 h-4 cursor-pointer hover:text-neon-orange" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <h3 className="font-semibold text-white mb-3">Shop the look</h3>
-                  {outfits[currentOutfit].products.map((product, idx) => (
-                    <motion.div
-                      key={idx}
-                      whileHover={{ x: 5 }}
-                      className="flex items-center justify-between p-3 glass-card rounded-xl cursor-pointer hover:border-neon-orange/30"
-                    >
-                      <div>
-                        <div className="font-medium text-sm">{product.name}</div>
-                        <div className="text-xs text-white/60">{product.brand}</div>
-                      </div>
-                      <div className="text-neon-orange font-bold">{product.price}</div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Outfit Navigation */}
-            <div className="flex justify-center space-x-2 mt-6">
-              {outfits.map((_, idx) => (
-                <motion.button
-                  key={idx}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setCurrentOutfit(idx)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    idx === currentOutfit ? 'bg-neon-orange shadow-neon' : 'bg-white/20'
-                  }`}
-                />
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center"
-        >
-          <div className="w-6 h-10 border-2 border-neon-orange rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-neon-orange rounded-full mt-2 animate-pulse" />
-          </div>
-          <p className="text-xs text-white/60 mt-2">Kaydır</p>
-        </motion.div>
-      </motion.section>
-
-      {/* Features Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="py-20 px-6"
-      >
-        <div className="max-w-6xl mx-auto">
-          <motion.h2 
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-4xl lg:text-6xl font-display font-bold text-center mb-16"
-          >
-            <span className="gradient-text">Neden FindOut?</span>
-          </motion.h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Search,
-                title: "AI Powered Search",
-                description: "Görüntü bazlı arama ile istediğiniz kıyafeti anında bulun"
-              },
-              {
-                icon: Users,
-                title: "Gerçek İnsanlar",
-                description: "Modellerden değil, sizin gibi gerçek insanlardan ilham alın"
-              },
-              {
-                icon: TrendingUp,
-                title: "Trend Analizi",
-                description: "AI ile gelecekteki trendleri önceden keşfedin"
-              },
-              {
-                icon: ShoppingBag,
-                title: "Direkt Alışveriş",
-                description: "Beğendiğiniz her ürünün linkine anında ulaşın"
-              },
-              {
-                icon: Star,
-                title: "Kişisel Stil",
-                description: "Size özel stil önerileri alın ve profilinizi geliştirin"
-              },
-              {
-                icon: Zap,
-                title: "Anlık Bildirimler",
-                description: "Favori marklarınızdan yeni ürünler çıktığında haber alın"
-              }
-            ].map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ y: 50, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="glass-card p-8 rounded-2xl text-center group cursor-pointer"
-              >
-                <div className="w-16 h-16 bg-neon-gradient rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-4 text-neon">{feature.title}</h3>
-                <p className="text-white/70 leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* CTA Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="py-20 px-6 text-center"
-      >
-        <div className="max-w-4xl mx-auto glass-card p-12 rounded-3xl">
-          <motion.h2 
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-4xl lg:text-5xl font-display font-bold mb-6 gradient-text"
-          >
-            Stilinizi Keşfetmeye Hazır mısınız?
-          </motion.h2>
-          <motion.p 
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-xl text-white/80 mb-8 max-w-2xl mx-auto"
-          >
-            Binlerce kullanıcı zaten FindOut ile moda yolculuğunu başlattı. 
-            Siz de katılın ve stilinizi bir üst seviyeye taşıyın.
-          </motion.p>
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="neon-button text-lg px-8 py-4"
-            >
-              Hemen Başla
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="glass-card px-8 py-4 rounded-2xl border-2 border-white/10 hover:border-neon-orange/50 transition-all duration-300"
-            >
-              Demo İzle
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/10">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-neon-gradient rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-display font-bold gradient-text">FindOut</span>
-          </div>
-          <p className="text-white/60 mb-6">Moda keşfinin geleceği, bugün başlıyor.</p>
-          <p className="text-sm text-white/40">
-            © 2024 FindOut. Tüm hakları saklıdır. Made with ❤️ in Turkey.
-          </p>
-        </div>
-      </footer>
-    </div>
+    <Router basename="/FindOut">
+      <div className="min-h-screen bg-void text-white overflow-x-hidden">
+        {/* Animated Background */}
+        <div className="fixed inset-0 hero-bg pointer-events-none" />
+        
+        {/* Global Navigation */}
+        <Navigation user={user} />
+        
+        {/* Route Configuration */}
+        <Routes>
+          <Route path="/" element={<LandingPage user={user} />} />
+          <Route path="/upload" element={<OutfitUpload onClose={() => window.history.back()} onSubmit={async () => {}} />} />
+          <Route path="/feed" element={<InfiniteOutfitFeed />} />
+          <Route path="/discover" element={<InfiniteOutfitFeed />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

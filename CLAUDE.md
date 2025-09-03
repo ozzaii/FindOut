@@ -1,6 +1,6 @@
-# FindOut - FUTURISTIC FASHION DISCOVERY PLATFORM =€(
+# FindOut - FUTURISTIC FASHION DISCOVERY PLATFORM =ï¿½(
 
-## <¯ ABSOLUTE PROJECT COMMANDMENTS
+## <ï¿½ ABSOLUTE PROJECT COMMANDMENTS
 
 ### DESIGN PHILOSOPHY - SEXY, FUTURISTIC, ULTRA-MODERN
 - **NO BORING STANDARD DESIGNS** - Every pixel is crafted with obsession
@@ -19,11 +19,12 @@
 - **PERFORMANCE OBSESSED** - Sub-second everything
 
 ### AI CONFIGURATION - EXCLUSIVELY GOOGLE AI STUDIO
-- **Model**: `gemini-2.0-flash-exp` (NEVER CHANGE THIS)
+- **Model**: `gemini-2.5-flash-lite` (NEVER CHANGE THIS - EXACT MODEL REQUIRED)
 - **API Key**: AIzaSyARZyERqMaFInsbRKUA0NxOok77syBNzK8
 - **Features**: Visual search, style analysis, trend prediction, outfit generation
+- **Specifications**: Most cost-efficient and fastest 2.5 model, optimized for low latency, high-volume tasks
 
-## <¨ DESIGN SYSTEM - FUTURISTIC FASHION AESTHETIC
+## <ï¿½ DESIGN SYSTEM - FUTURISTIC FASHION AESTHETIC
 
 ### Color Palette
 ```scss
@@ -173,7 +174,7 @@ $mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 ```
 
-## <× TECHNICAL ARCHITECTURE
+## <ï¿½ TECHNICAL ARCHITECTURE
 
 ### Tech Stack (FINALIZED - NO CHANGES)
 ```typescript
@@ -204,16 +205,24 @@ const TECH_STACK = {
   },
   ai: {
     provider: "Google AI Studio ONLY",
-    model: "gemini-2.0-flash-exp",
+    model: "gemini-2.5-flash-lite",
     apiKey: "AIzaSyARZyERqMaFInsbRKUA0NxOok77syBNzK8",
     features: [
       "Visual outfit analysis",
-      "Style personality detection",
+      "Style personality detection", 
       "Trend forecasting",
       "Color matching",
       "Body type optimization",
       "Weather-based recommendations",
       "Event-specific styling"
+    ],
+    capabilities: [
+      "Low latency optimization",
+      "Cost-efficient processing",
+      "High-volume task handling",
+      "1 million token context",
+      "Multimodal input support",
+      "Tool integration (Search, Code Execution)"
     ]
   },
   deployment: {
@@ -226,7 +235,7 @@ const TECH_STACK = {
 }
 ```
 
-## =ñ COMPLETE FEATURE IMPLEMENTATION
+## =ï¿½ COMPLETE FEATURE IMPLEMENTATION
 
 ### Phase 1: Core MVP (Weeks 1-4) (
 
@@ -243,7 +252,7 @@ const TECH_STACK = {
 - [ ] Real-time image optimization with WebP
 - [ ] AI-powered auto-tagging (Gemini Vision API)
 - [ ] Product link extraction with web scraping
-- [ ] Multi-angle outfit photos (360° view)
+- [ ] Multi-angle outfit photos (360ï¿½ view)
 - [ ] AR try-on preview (future)
 
 #### 3. TikTok-Style Discovery Feed
@@ -297,7 +306,7 @@ interface AIStyleAssistant {
 ```typescript
 interface PremiumTiers {
   basic: {
-    price: "º49/month",
+    price: "ï¿½49/month",
     features: [
       "Unlimited outfit saves",
       "Advanced filters",
@@ -306,7 +315,7 @@ interface PremiumTiers {
     ]
   },
   pro: {
-    price: "º99/month",
+    price: "ï¿½99/month",
     features: [
       "Everything in Basic",
       "AI style assistant",
@@ -315,7 +324,7 @@ interface PremiumTiers {
     ]
   },
   influencer: {
-    price: "º299/month",
+    price: "ï¿½299/month",
     features: [
       "Everything in Pro",
       "Verified badge",
@@ -326,7 +335,7 @@ interface PremiumTiers {
 }
 ```
 
-### Phase 3: Scale & Monetization (Weeks 9-12) =Ž
+### Phase 3: Scale & Monetization (Weeks 9-12) =ï¿½
 
 #### 1. Brand Partnership Portal
 - [ ] Self-service brand dashboard
@@ -342,9 +351,9 @@ interface PremiumTiers {
 - [ ] Local brand integration
 - [ ] Currency conversion
 
-## =€ REVOLUTIONARY FEATURES
+## =ï¿½ REVOLUTIONARY FEATURES
 
-### 1. Outfit 360° View
+### 1. Outfit 360ï¿½ View
 Users can upload multiple angles of their outfit, creating an interactive 3D view that others can rotate and examine.
 
 ### 2. AI Body Type Matching
@@ -359,7 +368,7 @@ Live streaming shopping sessions where users can shop together and vote on outfi
 ### 5. Trend Prediction Engine
 AI-powered trend forecasting that predicts what will be popular in 30-60 days.
 
-## =Ê DATABASE SCHEMA (PRODUCTION-READY)
+## =ï¿½ DATABASE SCHEMA (PRODUCTION-READY)
 
 ```sql
 -- Users Table (Extended)
@@ -428,7 +437,7 @@ CREATE INDEX idx_outfits_tags ON outfits USING gin(tags);
 CREATE INDEX idx_outfits_style ON outfits USING gin(style_tags);
 ```
 
-## <® USER EXPERIENCE FLOW
+## <ï¿½ USER EXPERIENCE FLOW
 
 ### Onboarding Journey
 ```
@@ -460,8 +469,8 @@ CREATE INDEX idx_outfits_style ON outfits USING gin(style_tags);
 
 ### Core User Journey
 ```
-DISCOVER ’ ENGAGE ’ SAVE ’ SHOP ’ SHARE ’ EARN
-   “         “        “       “       “       “
+DISCOVER ï¿½ ENGAGE ï¿½ SAVE ï¿½ SHOP ï¿½ SHARE ï¿½ EARN
+   ï¿½         ï¿½        ï¿½       ï¿½       ï¿½       ï¿½
 Infinite  Double   Collect  Direct  Social  Commis-
  Scroll    Tap    Outfits   Links   Share   sions
 ```
@@ -481,7 +490,7 @@ Infinite  Double   Collect  Direct  Social  Commis-
 - [ ] Regular security audits
 - [ ] Bug bounty program
 
-## =È PERFORMANCE TARGETS
+## =ï¿½ PERFORMANCE TARGETS
 
 ### Critical Metrics
 - **First Contentful Paint**: <1s
@@ -493,7 +502,7 @@ Infinite  Double   Collect  Direct  Social  Commis-
 - **Frame Rate**: 60fps (animations)
 - **Scroll Performance**: Buttery smooth
 
-## =¦ DEPLOYMENT PIPELINE
+## =ï¿½ DEPLOYMENT PIPELINE
 
 ### GitHub Actions Workflow
 ```yaml
@@ -546,47 +555,47 @@ jobs:
           cname: findout.style
 ```
 
-## =° REVENUE PROJECTIONS
+## =ï¿½ REVENUE PROJECTIONS
 
 ### Year 1 Targets
 ```typescript
 const revenueModel = {
   affiliateCommissions: {
     avgCommissionRate: "10%",
-    avgOrderValue: "º500",
+    avgOrderValue: "ï¿½500",
     conversionRate: "3%",
     monthlyClicks: 100000,
-    monthlyRevenue: "º150,000"
+    monthlyRevenue: "ï¿½150,000"
   },
   premiumSubscriptions: {
-    basic: { users: 1000, price: 49, revenue: "º49,000" },
-    pro: { users: 500, price: 99, revenue: "º49,500" },
-    influencer: { users: 100, price: 299, revenue: "º29,900" },
-    monthlyRevenue: "º128,400"
+    basic: { users: 1000, price: 49, revenue: "ï¿½49,000" },
+    pro: { users: 500, price: 99, revenue: "ï¿½49,500" },
+    influencer: { users: 100, price: 299, revenue: "ï¿½29,900" },
+    monthlyRevenue: "ï¿½128,400"
   },
   brandPartnerships: {
-    sponsoredPosts: "º50,000/month",
-    exclusiveCollections: "º100,000/month",
-    dataInsights: "º30,000/month",
-    monthlyRevenue: "º180,000"
+    sponsoredPosts: "ï¿½50,000/month",
+    exclusiveCollections: "ï¿½100,000/month",
+    dataInsights: "ï¿½30,000/month",
+    monthlyRevenue: "ï¿½180,000"
   },
-  totalMonthly: "º458,400",
-  totalYearly: "º5,500,800"
+  totalMonthly: "ï¿½458,400",
+  totalYearly: "ï¿½5,500,800"
 }
 ```
 
-## <¯ SUCCESS METRICS
+## <ï¿½ SUCCESS METRICS
 
 ### KPIs
 - **User Growth**: 5,000 users/month
 - **Retention**: >50% (30-day)
 - **Engagement**: >70% DAU/MAU
 - **Conversion**: >3% (affiliate)
-- **Revenue/User**: º92/month
+- **Revenue/User**: ï¿½92/month
 - **NPS Score**: >60
 - **App Store Rating**: >4.5
 
-## ¡ QUICK START COMMANDS
+## ï¿½ QUICK START COMMANDS
 
 ```bash
 # Development
