@@ -205,11 +205,9 @@ const OutfitUpload = ({ onClose, onSubmit }: OutfitUploadProps) => {
         ]
       }));
 
-      // Auto-transition to finalizing step - NO MANUAL INTERVENTION
-      setTimeout(() => {
-        setCurrentStep('finalizing');
-        finalizeUpload();
-      }, 2000);
+      // Don't auto-transition - let user review the AI analysis
+      // User will manually click to continue
+      console.log('AI analysis complete - waiting for user action');
 
     } catch (error) {
       console.error('AI analysis failed:', error);
@@ -218,27 +216,29 @@ const OutfitUpload = ({ onClose, onSubmit }: OutfitUploadProps) => {
     }
   };
 
-  // GODLIKE FINALIZATION - Seamless upload completion
+  // GODLIKE FINALIZATION - User-controlled upload completion
   const finalizeUpload = async () => {
     try {
-      setCurrentStep('finalizing');
+      // Don't need to set step here - already set when button clicked
+      // Just process the upload
+      console.log('Finalizing upload with products:', formData.products);
       
-      // Simulate processing with beautiful loading
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+    } catch (error) {
+      console.error('Upload finalization failed:', error);
+    }
+  };
+
+  // Complete the upload process
+  const completeUpload = async () => {
+    try {
       // Complete the upload
       await onSubmit(formData);
       
       // Show success state
       setCurrentStep('success');
       
-      // Auto-close after celebrating success
-      setTimeout(() => {
-        onClose();
-      }, 3000);
-      
     } catch (error) {
-      console.error('Upload finalization failed:', error);
+      console.error('Upload completion failed:', error);
     }
   };
 
@@ -608,18 +608,16 @@ const OutfitUpload = ({ onClose, onSubmit }: OutfitUploadProps) => {
           Geri
         </button>
         {aiAnalysis && (
-          <div className="glass-card p-4 rounded-xl border border-neon-orange/30">
-            <div className="flex items-center space-x-3">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="w-6 h-6 border-2 border-neon-orange border-t-transparent rounded-full"
-              />
-              <span className="text-neon-orange font-semibold">
-                AI analizi tamamlandı! Otomatik yükleme başlatılıyor...
-              </span>
-            </div>
-          </div>
+          <button
+            onClick={() => {
+              setCurrentStep('finalizing');
+              finalizeUpload();
+            }}
+            className="neon-button flex items-center space-x-2"
+          >
+            <span>Ürünleri İncele ve Devam Et</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         )}
       </div>
     </div>
@@ -734,6 +732,17 @@ const OutfitUpload = ({ onClose, onSubmit }: OutfitUploadProps) => {
               +{formData.products.length - 4} ürün daha tespit edildi
             </div>
           )}
+        </div>
+        
+        {/* Manual Completion Button */}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={completeUpload}
+            className="neon-button flex items-center space-x-2 px-8 py-4"
+          >
+            <span className="text-lg font-semibold">Yüklemeyi Tamamla</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
@@ -857,11 +866,14 @@ const OutfitUpload = ({ onClose, onSubmit }: OutfitUploadProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="text-center"
+        className="text-center mt-8"
       >
-        <p className="text-white/60 text-sm">
-          3 saniye içinde otomatik olarak kapanacak...
-        </p>
+        <button
+          onClick={onClose}
+          className="px-8 py-3 bg-gradient-to-r from-neon-orange to-purple-500 text-white font-semibold rounded-full hover:scale-105 transition-transform"
+        >
+          Tamamlandı - Kapat
+        </button>
       </motion.div>
     </div>
   );
