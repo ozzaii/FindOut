@@ -19,6 +19,7 @@ import ViralSharePanel from './ViralSharePanel';
 import AIStyleMatcher from './AIStyleMatcher';
 import OutfitReactions from './OutfitReactions';
 import OutfitRemixer from './OutfitRemixer';
+import OutfitDetailModal from './OutfitDetailModal';
 
 interface InfiniteOutfitFeedProps {
   onOutfitClick?: (outfit: FeedItem) => void;
@@ -224,7 +225,7 @@ const mockOutfits: FeedItem[] = [
   }
 ];
 
-const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: InfiniteOutfitFeedProps) => {
+const InfiniteOutfitFeed = ({ onUserClick, onProductClick }: InfiniteOutfitFeedProps) => {
   const [outfits, setOutfits] = useState<FeedItem[]>(mockOutfits);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -232,6 +233,10 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
   const [savedOutfits, setSavedOutfits] = useState<Set<string>>(new Set());
   const [_currentlyPlaying, _setCurrentlyPlaying] = useState<string | null>(null);
   const [_muted, _setMuted] = useState(true);
+  const [showHeartAnimation, setShowHeartAnimation] = useState<string | null>(null);
+  const [lastTap, setLastTap] = useState(0);
+  const [selectedOutfit, setSelectedOutfit] = useState<FeedItem | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   
   // Viral features state
   const [sharePanel, setSharePanel] = useState<{ isOpen: boolean; outfit: any }>({ isOpen: false, outfit: null });
@@ -280,6 +285,27 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
     
     if (node) observerRef.current.observe(node);
   }, [loading, hasMore, loadMoreOutfits]);
+
+  // Handle double tap for like
+  const handleDoubleTap = (outfitId: string) => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+    
+    if (now - lastTap < DOUBLE_TAP_DELAY) {
+      // Double tap detected!
+      if (!likedOutfits.has(outfitId)) {
+        handleLike(outfitId);
+        
+        // Show heart animation
+        setShowHeartAnimation(outfitId);
+        setTimeout(() => {
+          setShowHeartAnimation(null);
+        }, 1000);
+      }
+    }
+    
+    setLastTap(now);
+  };
 
   // Handle like action
   const handleLike = (outfitId: string) => {
@@ -406,7 +432,10 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
               className="relative h-screen snap-start overflow-hidden"
             >
               {/* Background Image */}
-              <div className="absolute inset-0">
+              <div 
+                className="absolute inset-0"
+                onClick={() => handleDoubleTap(outfit.id)}
+              >
                 <img
                   src={outfit.images[0]?.url}
                   alt={outfit.title}
@@ -414,6 +443,21 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                
+                {/* Double Tap Heart Animation */}
+                <AnimatePresence>
+                  {showHeartAnimation === outfit.id && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 1 }}
+                      animate={{ scale: 3, opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                    >
+                      <Heart className="w-24 h-24 text-red-500 fill-red-500" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Content Overlay */}
@@ -555,12 +599,15 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
                   </div>
                 </div>
 
-                {/* Comment Button */}
+                {/* Comment/Details Button */}
                 <div className="text-center">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => onOutfitClick?.(outfit)}
+                    onClick={() => {
+                      setSelectedOutfit(outfit);
+                      setShowDetailModal(true);
+                    }}
                     className="w-12 h-12 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                   >
                     <MessageCircle className="w-6 h-6" />
@@ -726,6 +773,18 @@ const InfiniteOutfitFeed = ({ onOutfitClick, onUserClick, onProductClick }: Infi
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Outfit Detail Modal */}
+      <OutfitDetailModal
+        outfit={selectedOutfit}
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        onLike={handleLike}
+        onSave={handleSave}
+        onShare={handleShare}
+        isLiked={selectedOutfit ? likedOutfits.has(selectedOutfit.id) : false}
+        isSaved={selectedOutfit ? savedOutfits.has(selectedOutfit.id) : false}
+      />
 
       {/* Outfit Reactions Modal */}
       <AnimatePresence>
