@@ -131,7 +131,17 @@ function App() {
         {/* Route Configuration */}
         <Routes>
           <Route path="/" element={<LandingPage user={user} />} />
-          <Route path="/upload" element={<OutfitUpload onClose={() => window.history.back()} onSubmit={async () => {}} />} />
+          <Route path="/upload" element={
+            <OutfitUpload 
+              onClose={() => window.history.back()} 
+              onSubmit={async (data) => {
+                console.log('Outfit uploaded:', data);
+                // Simulate upload success
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                return Promise.resolve();
+              }} 
+            />
+          } />
           <Route path="/feed" element={<InfiniteOutfitFeed />} />
           <Route path="/discover" element={<InfiniteOutfitFeed />} />
         </Routes>
